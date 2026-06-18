@@ -183,6 +183,15 @@ class MemoryManager:
         
         if operation_type == "add_memory":
             memory_note = self._analyze_query_to_memory(query)
+            # Default owner_agent to the requesting agent so retrieval's
+            # sharing filter (which matches owner_agent against the agent
+            # asking) can find the agent's own memories. Explicit values
+            # (e.g. from ConversationExtractor) are preserved.
+            if memory_note.metadata is None:
+                memory_note.metadata = {}
+            memory_note.metadata.setdefault(
+                "owner_agent", memory_syscall.agent_name
+            )
             # Track user_id for cross-agent discovery.
             uid = (memory_note.metadata or {}).get("user_id")
             if uid and uid != query.params.get("agent_name", ""):

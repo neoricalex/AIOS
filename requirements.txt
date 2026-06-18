@@ -35,5 +35,8 @@ opentelemetry-proto>=1.25.0
 
 # Memory provider integrations (optional)
 mem0ai>=1.0.11
+# Required by mem0's Ollama embedder/LLM backend; mem0 imports it lazily
+# and otherwise prompts for an interactive install (fails non-interactively)
+ollama
 # Pinned to 2.0.0 — later versions have API incompatibilities with Zep free tier
 zep-cloud==2.0.0
