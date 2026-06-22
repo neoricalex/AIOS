@@ -282,12 +282,18 @@ class Mem0Provider(MemoryProvider):
             # Build add parameters
             add_kwargs = {
                 "user_id": user_id,
-                "metadata": metadata
+                "metadata": metadata,
+                # Store the MemoryNote verbatim. With the default infer=True,
+                # Mem0 runs LLM fact-extraction over the content and, with
+                # small/local models, often returns {"results": []} — silently
+                # storing nothing. We already pass fully-formed notes, so skip
+                # inference and persist the text as-is.
+                "infer": False,
             }
-            
+
             if agent_id:
                 add_kwargs["agent_id"] = agent_id
-            
+
             # Add memory to Mem0
             result = self.client.add(memory_note.content, **add_kwargs)
             
